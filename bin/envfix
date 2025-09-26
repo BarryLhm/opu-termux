@@ -1,0 +1,16 @@
+#!/bin/env bash
+
+. "${RUNTIME_DIR?}/common.sh"
+
+## fix dns list
+DNSLIST="/etc/resolv.conf"
+[ ! -l "$DNSLIST" ] || \
+{
+	rm "$DNSLIST"
+	echo "223.5.5.5" >> "$DNSLIST"
+	echo "114.114.114.114" >> "$DNSLIST"
+}
+
+## install dotnet
+pkg_add dotnet-runtime-8.0
+
