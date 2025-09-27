@@ -109,10 +109,10 @@ c_run()
 	  -b "/sdcard" \
 	  -b "$O_DATA:/root/.local/share/OpenUtau" \
 	  /bin/env -i TERM="$TERM" HOME="/root" RUNTIME_DIR="$R_DIR" \
-	  PATH="/usr/bin:/usr/sbin:$R_DIR/bin" \
-	  DOTNET_GCHeapHardLimitPercent=50 \
+	  PATH="/usr/bin:/usr/sbin:$R_DIR/bin" LANG="zh_CN.UTF-8" \
 	  DISPLAY="$X_DISPLAY" GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=3.2 \
 	  PULSE_SERVER="tcp:127.0.0.1:4713" \
+	  DOTNET_GCHeapHardLimitPercent=50 \
 	  "$@"
 }
 

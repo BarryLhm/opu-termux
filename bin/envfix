@@ -32,4 +32,13 @@ package sync
 package up
 package add "dotnet-runtime-8.0" "libx11-6" "libice6" "libsm6" \
   "fontconfig" "fonts-noto-ui-core" "fonts-noto-cjk" \
-  "libgl1" "dbus-x11" "xfwm4" "libpulse0"
+  "libgl1" "dbus-x11" "xfwm4" "libpulse0" "language-pack-zh-hans"
+
+## generate locales
+
+cat <<-EOF > /etc/locale.gen
+zh_CN.UTF-8 UTF-8
+C.UTF-8 UTF-8
+EOF
+
+locale-gen
