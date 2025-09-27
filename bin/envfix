@@ -3,14 +3,32 @@
 . "${RUNTIME_DIR?}/common.sh"
 
 ## fix dns list
+msg "正在处理 DNS 服务器列表..."
 DNSLIST="/etc/resolv.conf"
-[ ! -l "$DNSLIST" ] || \
+#[ ! -L "$DNSLIST" ] || \
 {
-	rm "$DNSLIST"
-	echo "223.5.5.5" >> "$DNSLIST"
-	echo "114.114.114.114" >> "$DNSLIST"
+	[ ! -f "$DNSLIST" ] || print_run rm "$DNSLIST"
+	for i in "223.5.5.5" "114.114.114.114"
+	do	msg "写入新条目：'$i'"
+		echo "nameserver $i" >> "$DNSLIST"
+	done
 }
 
-## install dotnet
-pkg_add dotnet-runtime-8.0
+### fix sources
+msg "正在处理软件源列表..."
+SRCLIST="/etc/apt/sources.list"
+[ ! -f "$SRCLIST" ] || print_run mv "$SRCLIST" "$SRCLIST.bak"
+cat <<-EOF > "$SRCLIST.d/ubuntu.sources"
+	Types: deb
+	URIs: $DB_MIRROR
+	Suites: $DB_SUITE $DB_SUITE-updates $DB_SUITE-security \
+		$DB_SUITE-backports $DB_SUITE-proposed
+	Components: main universe multiverse restricted
+	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+EOF
 
+## install packages
+pkg_up
+pkg_add "dotnet-runtime-8.0" "libx11-6" "libice6" "libsm6" \
+  "fontconfig" "fonts-noto-ui-core" "fonts-noto-cjk" \
+  "libgl1" "dbus-x11" "xfwm4" "libpulse0"

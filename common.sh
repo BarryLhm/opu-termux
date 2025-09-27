@@ -11,16 +11,22 @@ set -eu
 
 ####### definitions here
 
-T_ROOT="/data/data/com.termux/files"
+T_STOR="/data/data/com.termux"
+T_ROOT="$T_STOR/files"
 R_DIR="/runtime"
+D_NULL="/dev/null"
+O_DATA="/sdcard/OpenUtau"
+X_DISPLAY=":3"
 
 SCRIPT="$(realpath "$0")"
 [ "${RUNTIME_DIR-}" ] && DIR="$RUNTIME_DIR" || DIR="${SCRIPT%/*}"
 PROG="${0##*/}"
 C_ROOT="$DIR/rootfs"
+SHM_DIR="$DIR/shm"
+OPU_DIR="$DIR/OpenUtau"
 
 DB_MIRROR="https://mirrors.ustc.edu.cn/ubuntu-ports"
-DB_VERSION="plucky"
+DB_SUITE="plucky"
 
 declare -A T_COLOR=\
 (
@@ -37,8 +43,8 @@ done
 
 msg()
 {
-	local msg="$1"; shift
-	for i in BLUE "$@"
+	local msg="$1" i; shift
+	for i in GREEN "$@"
 	do	echo -n "${T_COLOR["$i"]}"
 	done
 	echo "$msg${T_COLOR[RESET]}"
@@ -57,7 +63,10 @@ errexit()
 
 createdir()
 {
-	[ -d "$1" ] || mkdir -- "$1" || error "无法创建目录：'$1'"
+	local i
+	for i in "$@"
+	do	[ -d "$i" ] || mkdir -- "$i" || error "无法创建目录：'$i'，请手动处理"
+	done
 }
 
 print_run()
@@ -69,34 +78,58 @@ print_run()
 pkg_add()
 {
 	print_run apt-get update
-	print_run apt-get install -y -- "$@"
+	print_run apt-get install -y "$@"
+}
+
+pkg_up()
+{
+	print_run apt-get upgrade -y
 }
 
 host_prep()
 {
-	pkg add "proot" "debootstrap" "termux-x11-nightly" "pulseaudio"
+	pkg add "proot" "debootstrap" "termux-x11-nightly" "virglrenderer-android" \
+	  "pulseaudio"
 }
 
 bootstrap()
 {
+	msg "正在安装系统..."
 	createdir "$C_ROOT"
-	print_run debootstrap "$DB_VERSION" "$C_ROOT" "$DB_MIRROR" || \
+	print_run debootstrap "$DB_SUITE" "$C_ROOT" "$DB_MIRROR" || \
 	  error "安装系统失败"
 }
 
 c_run()
 {
 	msg "[进入容器] 命令行：'$*'" GREEN
+	createdir "$SHM_DIR" "$O_DATA"
 	LD_PRELOAD="" \
-	  proot -0 -r "$C_ROOT" -w "/root" \
-	  -b "/dev" -b "/proc" -b "/sys" \
+	  proot -0 --link2symlink --kill-on-exit -r "$C_ROOT" -w "/root" \
+	  -b "/dev" -b "/proc" -b "/sys" -b "$SHM_DIR:/dev/shm" \
+	  -b "$D_NULL:/proc/partitions" \
 	  -b "$DIR:$R_DIR" \
-	  -b "$T_ROOT/home:/root" \
+	  -b "/apex" -b "/system" -b "/linkerconfig/ld.config.txt" \
+	  -b "$T_STOR" \
 	  -b "$T_ROOT/usr/tmp:/tmp" \
 	  -b "/sdcard" \
+	  -b "$O_DATA:/root/.local/share/OpenUtau" \
 	  /bin/env -i TERM="$TERM" HOME="/root" RUNTIME_DIR="$R_DIR" \
 	  PATH="/usr/bin:/usr/sbin:$R_DIR/bin:/root/bin" \
+	  DOTNET_GCHeapHardLimitPercent=50 \
+	  DISPLAY="$X_DISPLAY" GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=3.2 \
+	  PULSE_SERVER="tcp:127.0.0.1:4713" \
 	  "$@"
+}
+
+host_svc()
+{
+	case "$1" in
+	x11) termux-x11 "$X_DISPLAY";;
+	virgl) virgl_test_server_android;;
+	pulse)	DISPLAY="$X_DISPLAY" pulseaudio --exit-idle-time=-1 \
+		  -n -F "$DIR/pulse-config.pa";;
+	esac
 }
 
 ####### autoexec here

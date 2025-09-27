@@ -1,2 +1,4 @@
 /rootfs/
 /.status/
+/shm/
+/OpenUtau/
