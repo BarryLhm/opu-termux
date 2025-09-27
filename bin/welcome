@@ -1,5 +1,0 @@
-#!/bin/env bash
-
-. "${RUNTIME_DIR?}/common.sh"
-
-#

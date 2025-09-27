@@ -28,7 +28,8 @@ cat <<-EOF > "$SRCLIST.d/ubuntu.sources"
 EOF
 
 ## install packages
-pkg_up
-pkg_add "dotnet-runtime-8.0" "libx11-6" "libice6" "libsm6" \
+package sync
+package up
+package add "dotnet-runtime-8.0" "libx11-6" "libice6" "libsm6" \
   "fontconfig" "fonts-noto-ui-core" "fonts-noto-cjk" \
   "libgl1" "dbus-x11" "xfwm4" "libpulse0"

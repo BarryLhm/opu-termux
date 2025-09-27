@@ -1,6 +1,0 @@
-#!/bin/env bash
-
-. "$(dirname "$(realpath "$0")")/common.sh"
-
-msg "欢迎使用 opu-termux ！"
-

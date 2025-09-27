@@ -2,4 +2,24 @@
 
 . "$(dirname "$(realpath "$0")")/common.sh"
 
+kill_jobs()
+{
+	local i
+	for i in $(jobs -p)
+	do	kill "$@" "$i"
+	done
+}
 
+start_svc()
+{
+	host_svc x11 &
+	host_svc virgl &
+	host_svc pulse &
+}
+
+trap "kill_jobs; sleep 0.02; kill_jobs -9" INT TERM HUP
+start_svc
+c_run xfwm4 &
+c_run xfce-panel &
+c_run OpenUtau "$@"
+wait

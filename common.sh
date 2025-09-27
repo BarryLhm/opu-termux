@@ -27,6 +27,7 @@ OPU_DIR="$DIR/OpenUtau"
 
 DB_MIRROR="https://mirrors.ustc.edu.cn/ubuntu-ports"
 DB_SUITE="plucky"
+DEFAULT_COLOR=GREEN
 
 declare -A T_COLOR=\
 (
@@ -44,7 +45,7 @@ done
 msg()
 {
 	local msg="$1" i; shift
-	for i in GREEN "$@"
+	for i in "$DEFAULT_COLOR" "$@"
 	do	echo -n "${T_COLOR["$i"]}"
 	done
 	echo "$msg${T_COLOR[RESET]}"
@@ -75,21 +76,14 @@ print_run()
 	"$@"
 }
 
-pkg_add()
+package()
 {
-	print_run apt-get update
-	print_run apt-get install -y "$@"
-}
-
-pkg_up()
-{
-	print_run apt-get upgrade -y
-}
-
-host_prep()
-{
-	pkg add "proot" "debootstrap" "termux-x11-nightly" "virglrenderer-android" \
-	  "pulseaudio"
+	local oper="$1"; shift
+	case "$oper" in
+	sync) print_run apt-get update;;
+	add) print_run apt-get install -y "$@";;
+	up) print_run apt-get upgrade -y;;
+	esac
 }
 
 bootstrap()
@@ -115,7 +109,7 @@ c_run()
 	  -b "/sdcard" \
 	  -b "$O_DATA:/root/.local/share/OpenUtau" \
 	  /bin/env -i TERM="$TERM" HOME="/root" RUNTIME_DIR="$R_DIR" \
-	  PATH="/usr/bin:/usr/sbin:$R_DIR/bin:/root/bin" \
+	  PATH="/usr/bin:/usr/sbin:$R_DIR/bin" \
 	  DOTNET_GCHeapHardLimitPercent=50 \
 	  DISPLAY="$X_DISPLAY" GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=3.2 \
 	  PULSE_SERVER="tcp:127.0.0.1:4713" \
@@ -134,11 +128,7 @@ host_svc()
 
 ####### autoexec here
 
-[ -w "/sdcard" ] || \
-{
-	msg "[提示] 需要存储权限" CYAN
-	print_run termux-setup-storage || \
-	  msg "[警告] 存储权限未授予，可能影响使用" YELLOW
-}
+[ -w "/sdcard" ] && STOR_ACCESS=1 || STOR_ACCESS=0
+[ "$STOR_ACCESS" = 1 ] || msg "[警告] 存储权限未授予，可能影响使用" YELLOW
 
 INITIALIZED=1
