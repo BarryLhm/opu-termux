@@ -19,7 +19,9 @@ start_svc()
 
 trap "kill_jobs; sleep 0.02; kill_jobs -9" INT TERM HUP
 start_svc
+## wait for xserver startup
+sleep 0.7
 c_run xfwm4 &
-c_run xfce-panel &
+c_run dbus-launch xfce4-panel &
 c_run OpenUtau "$@"
 wait
