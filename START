@@ -23,5 +23,11 @@ start_svc
 sleep 0.7
 c_run xfwm4 &
 c_run dbus-launch xfce4-panel &
-c_run OpenUtau "$@"
-wait
+c_run OpenUtau "$@" &
+msg "启动完成"
+c_run bash
+
+msg "正在退出..."
+kill_jobs
+sleep 0.7
+kill_jobs -9
