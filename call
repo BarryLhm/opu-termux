@@ -1,5 +1,5 @@
-#!/bin/env bash
+#!/data/data/com.termux/files/usr/bin/zsh -eu
 
-. "$(dirname "$(realpath "$0")")/common.sh"
+. "$(dirname "$(realpath "$0")")/res/common.zsh"
 
 "$@"

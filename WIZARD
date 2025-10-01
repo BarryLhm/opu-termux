@@ -1,6 +1,6 @@
-#!/bin/env bash
+#!/data/data/com.termux/files/usr/bin/zsh -eu
 
-. "$(dirname "$(realpath "$0")")/common.sh"
+. "$(dirname "$(realpath "$0")")/res/common.zsh"
 
 msg "欢迎使用 opu-termux！"
 msg "在使用之前，请完成以下步骤"

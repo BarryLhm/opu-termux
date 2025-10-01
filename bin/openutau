@@ -1,0 +1,5 @@
+#!/bin/env bash
+
+. "${RUNTIME_DIR?}/res/common.zsh"
+
+"$DIR/.openutau/OpenUtau" "$@"

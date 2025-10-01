@@ -1,0 +1,8 @@
+#!/bin/bash ## not executable, just for syntax highlighting
+declare -A M=\
+(
+[error]="错误"
+[createdir.fail]
+
+
+)

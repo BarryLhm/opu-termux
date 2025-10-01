@@ -1,6 +1,6 @@
-#!/bin/env bash
+#!/data/data/com.termux/files/usr/bin/zsh -eu
 
-. "${RUNTIME_DIR?}/common.sh"
+. "$RUNTIME_DIR?/res/common.zsh"
 
 ## fix dns list
 msg "正在处理 DNS 服务器列表..."

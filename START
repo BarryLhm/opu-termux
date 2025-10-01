@@ -1,6 +1,6 @@
-#!/bin/env bash
+#!/data/data/com.termux/files/usr/bin/zsh -eu
 
-. "$(dirname "$(realpath "$0")")/common.sh"
+. "$(dirname "$(realpath "$0")")/res/common.zsh"
 
 kill_jobs()
 {
@@ -23,7 +23,7 @@ start_svc
 sleep 0.7
 c_run xfwm4 &
 c_run dbus-launch xfce4-panel &
-c_run OpenUtau "$@" &
+c_run openutau "$@" &
 msg "启动完成"
 c_run bash
 

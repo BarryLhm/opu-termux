@@ -25,7 +25,7 @@ opu-termux 是开源软件，代码托管于 Codeberg 和 Github（镜像）
 
 运行 `pkg up`，中间会问一些问题，直接换行确认或输入Y即可
 
-运行 `pkg add git` 安装 Git
+运行 `pkg add zsh git` 安装 Zsh 和 Git
 
 2. 下载并配置 opu-termux
 
