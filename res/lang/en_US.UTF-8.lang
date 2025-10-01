@@ -1,1 +1,58 @@
-zh_CN.UTF-8.lang
+#!/bin/zsh
+## not executable, just for syntax highlighting
+
+declare -Ag MESSAGES=(
+[error]='Error'
+[mkdir.failed]="Couldn't create directory '%s', please check it manually"
+[runcmd]='Running Command'
+[bootstrapping]='Installing system...'
+[bootstrap.failed]='Failed to install system.'
+[cont.run]="[Entering Container] cmdline: '%s'"
+[stor.denied]='[Warning] Storage permission denied, may cause problems'
+
+## envfix
+[envfix.dns]='Processing DNS server list...'
+[envfix.dns.write]="Writing entry: '%s'"
+[envfix.repo]='Processing apt sources...'
+
+## start
+[start.fin]='Starting Finished'
+[start.quiting]='Quiting...'
+
+## wizard
+[W.welcome]='Welcome to opu-termux!'
+[W.guide]='Before starting, some configuration is required.'
+
+[W.1.title]='1. Environment'
+[W.1.pkgs_below]='Needs to install those packages:'
+[W.1.sync_failed]="Couldn't get data, please check network connection"
+[W.1.add_failed]='Installation failed, quiting...'
+
+[W.2.title]='2. Storage Permission'
+[W.2.perm_granted]='Permission granted'
+[W.2.perm_getting]='Getting storage access...'
+[W.2.perm_denied]='Cannot get storage access, please manually grant Termux “Access All Files” permission.'
+
+[W.3.title]='3. Install OpenUtau'
+[W.3.instruction]="Please unzip OpenUtau-linux-arm64.zip to directory '%s'
+(this directory should contain those .dll files and OpenUtau executable after extraction)
+You can use a file manager that supports SAF to access Termux's internal storage,
+or open session menu from the left edge and operate in a new session.
+
+Press any key after extraction to continue..."
+[W.3.prompt]='[Press a Key...]'
+[W.3.fin]='OpenUtau Installed'
+
+[W.4.title]='4. Setup container'
+[W.4.done]='Container already set up'
+[W.4.desc]='Will install Ubuntu %2$s to %1$s
+Enter Y to proceed (default), N to cancel
+You can use Ctrl-C to interrupt installation, if so please manually remove directory %1$s'
+[W.4.cancelled]='Installation cancelled'
+
+[W.5.title]='5. Configure container'
+[W.5.desc]='Install required packages and perform configuration in container'
+
+[W.fin]='Configuration finished, run START to launch
+(Please clear remaining service processes from previous start before launch)'
+)
