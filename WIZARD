@@ -1,49 +1,46 @@
 #!/data/data/com.termux/files/usr/bin/zsh -eu
 
-. "$(dirname "$(realpath "$0")")/res/common.zsh"
+. "$(dirname "$(realpath "$0")")/res/common.zsh" "$0"
 
-msg "欢迎使用 opu-termux！"
-msg "在使用之前，请完成以下步骤"
-msg "1. 环境配置"
-msg "需要安装以下软件包"
-package sync || error "无法获取信息，请检查网络连接和软件源配置"
-package add "proot" "debootstrap" "termux-x11-nightly" "virglrenderer-android" \
-  "pulseaudio" || error "安装失败，退出..."
-msg "2. 存储权限"
-if [ "$STOR_ACCESS" = 1 ]
-then msg "已经获得存储权限" GREEN
-else	msg "正在获取存储权限..."
+msg "$(M W.welcome)"
+msg "$(M W.guide)"
+
+msg "$(M W.1.title)"
+msg "$(M W.1.pkgs_below)"
+package sync || error "$(M W.1.sync_failed)"
+package add proot debootstrap termux-x11-nightly virglrenderer-android pulseaudio || \
+  error "$(M W.1.add_failed)"
+
+msg "$(M W.2.title)"
+if [ $STOR_ACCESS = 1 ]
+then msg "$(M W.2.perm_granted)" GREEN
+else	msg "$(M W.2.perm_getting)"
 	print_run termux-setup-storage || \
-	  msg "获取失败，请手动授予 Termux “访问所有文件” 权限"
+	  msg "$(M W.2.perm_denied)"
 fi
-msg "3. OpenUtau 安装"
-until [ -f "$OPU_DIR/OpenUtau" ]
-do	createdir "OPU_DIR"
-	msg "请将 OpenUtau-linux-arm64.zip 中的内容解压至 '$OPU_DIR' 目录"
-	msg "（解压后此目录应包含各种 dll 文件和 OpenUtau 主程序）"
-	msg "可以用 MT 管理器 “添加本地存储” 功能访问 Termux 目录并找到此目录，"
-	msg "也可以拉出 Termux 左边菜单栏启动另一会话进行操作"
-	echo
-	msg "完成后按换行继续配置"
-	read -r -s -p "[按换行继续...]"
+
+msg "$(M W.3.title)"
+until [ -f $OPU_DIR/OpenUtau ]
+do	createdir $OPU_DIR
+	msg "$(M W.3.instruction $OPU_DIR)"
+	read -r -s "none?$(M W.3.prompt)"
 	echo
 done
-chmod +x "$OPU_DIR/OpenUtau"
-msg "OpenUtau 已安装"
-msg "4. 安装容器"
-if [ -d "$C_ROOT" ]
-then msg "容器已安装"
-else	msg "将要在 $C_ROOT 安装 Ubuntu $DB_SUITE"
-	msg "输入 Y 确认（默认），输入 N 取消"
-	msg "你可以随时使用 Ctrl-C 终止安装，如果这样请删除 $C_ROOT 目录"
-	read -r -p "[Y/N]" key
-	case "$key" in
-	Y|y|"") bootstrap;;
-	*) error "用户已取消安装";;
+chmod +x $OPU_DIR/OpenUtau
+msg "$(M W.3.fin)"
+
+msg "$(M W.4.title)"
+if [ -d $C_ROOT ]
+then msg "$(M W.4.done)"
+else	msg "$(M W.4.desc $C_ROOT $DB_SUITE)"
+	read -r "key?[Y/N]"
+	case $key in
+	Y|y|'') bootstrap;;
+	*) error "$(M W.4.cancelled)";;
 	esac
 fi
-msg "5. 配置容器"
-msg "将在容器内安装需要的软件包并进行配置"
+msg "$(M W.5.title)"
+msg "$(M W.5.desc)"
 c_run "$R_DIR/bin/envfix"
-msg "配置完成，运行 START 启动"
-msg "在启动前请清理残留的服务进程"
+
+msg "(M W.fin)"
