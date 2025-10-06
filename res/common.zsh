@@ -1,6 +1,8 @@
 #!/bin/zsh
 ## not executable, just for syntax highlighting
 
+PS4='[%D{%6.}] '
+
 set -eu
 
 [ "${ZSH_VERSION-}" ] || \
@@ -42,6 +44,11 @@ O_DATA=/sdcard/OpenUtau
 
 DB_MIRROR=https://mirrors.ustc.edu.cn/ubuntu-ports
 DB_SUITE=plucky
+
+GH_REPO=stakira/OpenUtau
+declare -A GH_API=([latest]=https://api.github.com/repos/%s/releases/latest)
+GH_REL=https://github.com/%s/releases/download/%s/%s
+
 DEFAULT_COLOR=GREEN
 
 declare -A MESSAGES=() ## fallback

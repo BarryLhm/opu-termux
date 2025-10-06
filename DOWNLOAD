@@ -1,0 +1,30 @@
+#!/data/data/com.termux/files/usr/bin/zsh -eu
+
+. "$(dirname "$(realpath "$0")")/res/common.zsh" "$0"
+
+GH_MIRROR=https://gh.llkk.cc
+GH_FILENAME=OpenUtau-linux-arm64.zip
+
+geturl() #(type, [version, filename])
+{
+	local mirror=$GH_MIRROR
+	case $1 in
+	api_lat) printf %s$GH_API[latest] $mirror/ $GH_REPO;;
+	rel) printf %s$GH_REL $mirror/ $GH_REPO $2 $3;;
+	esac
+}
+
+get_latest()
+{
+	curl -s "$(geturl api_lat)" | jq -r .name
+}
+
+download() #(SEMANTIC version, path output)
+{
+	wget --show-progress -O $2 "$(geturl rel $1 $GH_FILENAME)"
+}
+
+download "$(get_latest)" $DATA/opu.zip
+mv $OPU_DIR $OPU_DIR.bak
+createdir $OPU_DIR
+unzip -d $OPU_DIR $DATA/opu.zip
