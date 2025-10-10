@@ -27,6 +27,9 @@ opu-termux 是开源软件，代码托管于 Codeberg 和 Github（镜像）
 
 运行 `pkg add zsh git` 安装 Zsh 和 Git
 
+如果要使用自动下载功能（`DOWNLOAD`），还需要安装 `curl` `wget` `jq`：
+`pkg add curl wget jq`
+
 2. 下载并配置 opu-termux
 
 运行 `git clone https://codeberg.org/BarryLhm/opu-termux` 下载此软件
@@ -40,4 +43,4 @@ opu-termux 是开源软件，代码托管于 Codeberg 和 Github（镜像）
 
 打开 Termux，运行 `./opu-termux/START`
 
-打开 Termux:X11，等待画面出现（可以提前打开一下，节省加载时间，这一步没有顺序要求，可以在任意时候进行）
+打开 Termux:X11，等待画面出现（任意时候打开均可）
