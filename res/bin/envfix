@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/zsh -eu
 
-. "${RUNTIME_DIR?}/res/common.zsh" "$0"
+. /runtime/res/common.zsh "$0"
 
 ## fix dns list
 msg "$(M envfix.dns)"

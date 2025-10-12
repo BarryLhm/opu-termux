@@ -19,7 +19,6 @@ set -eu
 
 T_STOR=/data/data/com.termux
 T_ROOT=$T_STOR/files
-R_DIR=/runtime
 D_NULL=/dev/null
 X_DISPLAY=:3
 
@@ -133,24 +132,35 @@ c_run() #(string[] cmdline)
 {
 	msg "$(M cont.run "$*")" GREEN
 	createdir $C_ROOT/tmp $OPU_DIR $HOME_DIR $O_DATA
-	LD_PRELOAD= \
-	  proot -0 --link2symlink --kill-on-exit -r $C_ROOT -w /root \
-	  -b /dev -b /proc -b /sys -b $C_ROOT/tmp:/dev/shm \
-	  -b $D_NULL:/proc/partitions \
-	  -b $DIR:$R_DIR \
-	  -b /apex -b /system -b /linkerconfig/ld.config.txt \
-	  -b $T_STOR \
-	  -b $T_ROOT/usr/tmp:/tmp \
-	  -b /sdcard \
-	  -b $OPU_DIR:$R_DIR/.openutau \
-	  -b $HOME_DIR:/root \
-	  -b $O_DATA:/root/.local/share/OpenUtau \
-	  /bin/env -i TERM=$TERM HOME=/root RUNTIME_DIR=$R_DIR \
-	  PATH=/usr/bin:/usr/sbin:$R_DIR/bin LANG=zh_CN.UTF-8 \
-	  DISPLAY=$X_DISPLAY GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=3.2 \
-	  PULSE_SERVER=tcp:127.0.0.1:4713 \
-	  DOTNET_GCHeapHardLimitPercent=50 \
-	  $@
+	local cl=(proot -0 -l -L -p --sysvipc --ashmem-memfd --kill-on-exit	)
+	  # unix runtime
+	  cl+=(  -r $C_ROOT -w /root -b /dev -b /proc -b /sys			)
+	  # enabling file based shmem (/dev/shm doesn't exist on android)
+	  #   notice the original /tmp in rootfs in not used in other place
+	  cl+=(  -b $C_ROOT/tmp:/dev/shm					)
+	  # "permission denied" crash prevention ## fuck android selinux
+	  cl+=(  -b $D_NULL:/proc/partitions					)
+	  # runtime dir
+	  cl+=(  -b $DIR:/runtime						)
+	  cl+=(  -b /apex -b /system -b /linkerconfig/ld.config.txt -b /data	)
+	  # shared tmp, necessary for x11/pulse/virgl sharing
+	  cl+=(  -b $T_ROOT/usr/tmp:/tmp					)
+	  cl+=(  -b /sdcard							)
+	  # bind openutau to a fixed place
+	  cl+=(  -b $OPU_DIR:/runtime/.openutau					)
+	  # shared home
+	  cl+=(  -b $HOME_DIR:/root						)
+	  # openutau data
+	  cl+=(  -b $O_DATA:/root/.local/share/OpenUtau				)
+	  cl+=(	 /bin/env -i							)
+	  cl+=(PATH=/usr/bin:/usr/sbin:/runtime/res/bin				)
+	  cl+=(HOME=/root TERM=$TERM LANG=$LANG					)
+	  cl+=(DISPLAY=$X_DISPLAY PULSE_SERVER=tcp:127.0.0.1:4713		)
+	  # virgl
+	  cl+=(GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=3.2		)
+	  # dotnet gcheap error fix
+	  cl+=(DOTNET_GCHeapHardLimitPercent=50					)
+	LD_PRELOAD= $cl $@
 }
 
 host_svc() #(service)
