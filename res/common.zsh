@@ -61,8 +61,11 @@ declare -A T_COLOR=(
 # gettext
 M()
 {
-	local key=$1; shift
-	printf ${MESSAGES[$key]-untranslated."$key" %s %s %s %s %s %s} $@
+	local key=$1 IFS=,; shift
+	if [ $+MESSAGES[$key] = 1 ]
+	then printf $MESSAGES[$key] $@
+	else printf 'untranslated.%s(%s)' $key "$*"
+	fi
 }
 
 load_lang()
@@ -80,7 +83,7 @@ msg() #(string message, [T_COLOR[] colors])
 {
 	local msg=$1 i; shift
 	for i in $DEFAULT_COLOR $@
-	do	echo -n $T_COLOR[$i]
+	do echo -n $T_COLOR[$i]
 	done
 	echo $msg$T_COLOR[RESET]
 }
@@ -100,7 +103,7 @@ createdir() #(path[] dirs)
 {
 	local i
 	for i in $@
-	do	[ -d $i ] || mkdir -- $i || error "$(M mkdir.failed $i)"
+	do [ -d $i ] || mkdir -- $i || error "$(M mkdir.failed $i)"
 	done
 }
 
