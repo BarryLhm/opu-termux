@@ -103,7 +103,7 @@ createdir() #(path[] dirs)
 {
 	local i
 	for i in $@
-	do [ -d $i ] || mkdir -- $i || error "$(M mkdir.failed $i)"
+	do [ -d $i ] || mkdir -p -- $i || error "$(M mkdir.failed $i)"
 	done
 }
 

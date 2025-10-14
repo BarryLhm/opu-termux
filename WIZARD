@@ -41,6 +41,6 @@ else	msg "$(M W.4.desc $C_ROOT $DB_SUITE)"
 fi
 msg "$(M W.5.title)"
 msg "$(M W.5.desc)"
-c_run "$R_DIR/bin/envfix"
+c_run "/runtime/bin/envfix"
 
-msg "(M W.fin)"
+msg "$(M W.fin)"
