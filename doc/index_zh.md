@@ -1,1 +1,1 @@
-[内部实现](doc/internal_zh.md)
+[内部实现](internal_zh.md)

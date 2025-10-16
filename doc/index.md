@@ -1,1 +1,1 @@
-[Internals](doc/internal.md)
+[Internals](internal.md)
