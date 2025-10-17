@@ -150,7 +150,7 @@ c_run() #(string[] cmdline)
 	  cl+=(  -b $T_ROOT/usr/tmp:/tmp					)
 	  cl+=(  -b /sdcard							)
 	  # bind openutau to a fixed place
-	  cl+=(  -b $OPU_DIR:/runtime/.openutau					)
+	  cl+=(  -b $OPU_DIR:/runtime/res/.openutau					)
 	  # shared home
 	  cl+=(  -b $HOME_DIR:/root						)
 	  # openutau data

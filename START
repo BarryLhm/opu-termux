@@ -19,6 +19,7 @@ start_svc()
 }
 
 trap "kill_jobs; sleep 0.02; kill_jobs -9" INT TERM HUP
+set +e
 start_svc
 ## wait for xserver startup
 sleep 0.5
