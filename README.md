@@ -6,6 +6,8 @@
 
 喜欢的话可以点个 star 喵~
 
+全部文档：[English](doc/index.md) [中文](doc/index_zh.md)
+
 ## 使用方法
 
 ### 配置

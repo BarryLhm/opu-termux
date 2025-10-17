@@ -1,1 +1,2 @@
-# this is a placeholder as it will be overlain by a dir in container
+# this is a placeholder as it will be overlaid by a dir in container
+# 这是一个占位文件，在容器里会被覆盖为一个目录

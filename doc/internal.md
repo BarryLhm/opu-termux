@@ -1,7 +1,7 @@
 
 # Internals
 
-- Files / Directories
+## Files / Directories
 
 + `res/`: resource directory
   + `common.zsh`: script library, see
@@ -20,3 +20,26 @@
 + `DOWNLOAD`: download and install OpenUtau
 + `WIZARD`: configuration wizard
 + `doc/`: documents
+
+## 
+
+- Script Library (`res/common.zsh`)
+
+A zsh script library that contains necessary global variables and functions
+
+NO command should be executed during load, except test commands and variable definitions
+
+Use this to include this library:
+
+`. "$(dirname "$(realpath "$0")")/res/common.zsh" "$0"`
+
+- PulseAudio configuration (`res/pulse-config.pa`)
+
+A PulseAudio config file that:
+
+disabled device idle suspension
+
+enabled aaudio sink support
+
+allows transportation through tcp
+
