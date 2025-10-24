@@ -52,10 +52,10 @@ DEFAULT_COLOR=GREEN
 
 declare -A MESSAGES=() ## fallback
 declare -A T_COLOR=(
-	[RESET]='\e[0m' [UNDERLINE]='\e[4m' [BLINK]='\e[5m'
-	[WHITE]='\e[37m\e[1m' [BLACK]='\e[30m' [GRAY]='\e[30m\e[1m'
-	[RED]='\e[31m\e[1m' [YELLOW]='\e[33m\e[1m' [GREEN]='\e[32m\e[1m'
-	[BLUE]='\e[34m\e[1m' [CYAN]='\e[36m\e[1m' [MAGENTA]='\e[35m\e[1m'
+	[RESET]=$'\e[0m' [UNDERLINE]=$'\e[4m' [BLINK]=$'\e[5m'
+	[WHITE]=$'\e[37m\e[1m' [BLACK]=$'\e[30m' [GRAY]=$'\e[30m\e[1m'
+	[RED]=$'\e[31m\e[1m' [YELLOW]=$'\e[33m\e[1m' [GREEN]=$'\e[32m\e[1m'
+	[BLUE]=$'\e[34m\e[1m' [CYAN]=$'\e[36m\e[1m' [MAGENTA]=$'\e[35m\e[1m'
 )
 
 # gettext
@@ -83,9 +83,9 @@ msg() #(string message, [T_COLOR[] colors])
 {
 	local msg=$1 i; shift
 	for i in $DEFAULT_COLOR $@
-	do echo -n $T_COLOR[$i]
+	do echo -E -n $T_COLOR[$i]
 	done
-	echo $msg$T_COLOR[RESET]
+	echo -E $msg$T_COLOR[RESET]
 }
 
 error() #(string message, [int retval])
