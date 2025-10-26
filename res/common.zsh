@@ -64,7 +64,7 @@ M()
 	local key=$1 IFS=,; shift
 	if [ $+MESSAGES[$key] = 1 ]
 	then printf $MESSAGES[$key] $@
-	else printf 'untranslated.%s(%s)' $key "$*"
+	else printf 'untranslated.%s{%s}' $key "$*"
 	fi
 }
 
